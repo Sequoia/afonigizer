@@ -1,3 +1,4 @@
 ##AFONIGIZER
-This will be a bookmarklet that obsures ("afonigizes") peoples' identities on facebook for screenshots.
-**This version reqiures [jquerify](http://www.learningjquery.com/2009/04/better-stronger-safer-jquerify-bookmarklet) ([Firefox plugin](firequery.binaryage.com/))**! I plan to change this.
+This will be a bookmarklet that obsures ("afonigizes") peoples' identities on facebook and google+ for screenshots.
+Currently, to use it, you paste it into your console in Firefox, Chrome, or Opera
+@todo add a demo screenshot
