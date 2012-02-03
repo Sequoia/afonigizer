@@ -1,26 +1,61 @@
-//imgHashService hashes a string and returns a robot
-//image generated based on the hash
-var imgHashService = 'http://static1.robohash.com/',
-    nameSelector = 'a.yn.Hf, a.actorName, div.actorName a',
-    avatarSelector = 'img.Fn.Yi, img.uiProfilePhoto',
-    avatars = document.querySelectorAll(avatarSelector),
-    names = document.querySelectorAll(nameSelector);
-	
-//Truncate the name
-//@todo randomize the first and last name
-for(var i = 0; i < names.length; i++){
-	var fullName = names.item(i),
-	    nameStr = fullName.innerHTML.substring(0,2);
-	fullName.innerHTML = nameStr + "...";
-};
+/**
+ * Some of the weird selectors, callbacks etc. are because
+ * google+ changes its classnames all the time so one must
+ * use some other method of targeting names and avatars
+ */
+(function(){
+	//imgHashService hashes a string and returns a robot
+	//image generated based on the hash
+	var imgHashService = 'http://static1.robohash.com/',
+		host = window.location.hostname,
+		services = {
+			google : {
+				//google seems to put "oid" (user id) attrib on names & avatars
+				avatarSelector : 'img[oid]',
+				nameSelector : 'a[oid]',
+				//the name selector matches name links and avatar image links
+				//so this checks that there is only one (text) child node
+				nameFilter : function(anchor){
+					return ( anchor.childNodes.length === 1 &&
+						     anchor.firstChild.nodeType === Node.TEXT_NODE );
+				},
+				//this is what to hash against g+ has diff img.src for medium 
+				//& small thumbs, so we use the oid (user id)
+				hashAttribute : 'oid'
+			},
+			facebook : {
+				avatarSelector : 'img.uiProfilePhoto',
+				nameSelector : 'a.actorName, div.actorName a, a.passiveName, span.passiveName',
+				hashAttribute : 'src'
+			}
+		};
+	//load the conf for the site we're on
+	if(host === 'plus.google.com') { conf = services.google; }
+	else if (host === 'www.facebook.com'){ conf = services.facebook; }
 
-//Replace the profile pic with a robot pic
-//@todo DOES NOT WORK WITH G+ medium and small profile img srcs are different
-//which results in a different hash/robot
-for(var i = 0; i < avatars.length; i++){
-    //generate image based on profile image src.
-    //(Is this always the same? I think so.)
-	var avatar = avatars.item(i);
-	    newSrc = imgHashService + avatar.src;
-	avatar.src = newSrc;
-};
+	avatars = document.querySelectorAll(conf.avatarSelector),
+	names = document.querySelectorAll(conf.nameSelector);
+
+	//Truncate the name
+	//@todo randomize the first and last name
+	for(var i = 0; i < names.length; i++){
+		
+		//if a nameFilter function exists and it returns false, it's not a name
+		if( 
+			conf.hasOwnProperty('nameFilter') &&
+			! conf.nameFilter( names.item(i) )
+		){ continue; }
+		var fullName = names.item(i),
+			nameStr = fullName.innerHTML.substring(0,2);
+		fullName.innerHTML = nameStr + "...";
+
+	};
+
+	//Replace the profile pic with a robot pic
+	for(var i = 0; i < avatars.length; i++){
+		//generate image based on profile image src.
+		var avatar = avatars.item(i);
+		newSrc = imgHashService + avatar.attributes[conf.hashAttribute].value;
+		avatar.src = newSrc;
+	};
+})();
