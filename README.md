@@ -8,7 +8,7 @@ Opera
 ###To do
 * -get first names list- shorten this list to ~100
 * get last names list (nouns).
-* map the names to an array and replace them rather than just truncating them
+* randomize names list better
 * get the names *in* the comments and replace them
 * add a demo screenshot
 * bookmarkletify it or whatever!!!!!!
