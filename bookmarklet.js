@@ -158,6 +158,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			fixNames(names);
 			fixAvatars(avatars);
 
+			return true;
 		} //dIt()
 	} // PUBLICS
 })(window, Math, Node);
