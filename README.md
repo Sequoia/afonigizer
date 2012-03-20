@@ -1,6 +1,6 @@
 ##AFONIGIZER
 This will be a bookmarklet that obsures ("afonigizes") people's identities on 
-facebook and google+ for screenshots.
+facebook and google+ (sort of google+) for screenshots.
 
 Currently, to use it, you paste it into your console in Firefox, Chrome, or 
 Opera
@@ -9,6 +9,10 @@ Opera
 * -get first names list- shorten this list to ~100
 * get last names list (nouns).
 * randomize names list better
-* get the names *in* the comments and replace them
 * add a demo screenshot
+* check it in g+ again
 * bookmarkletify it or whatever!!!!!!
+
+###Known issues
+* comments & posts not afonigized in google+, I can't figure how to handle the
+dynamic classnames

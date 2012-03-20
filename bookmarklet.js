@@ -12,6 +12,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				//google seems to put "oid" (user id) attrib on names & avatars
 				avatarSelector : 'img[oid]',
 				nameSelector : 'a[oid]',
+				textblockSelector : false,//dynamic classnames, haven't figured this out...
 				//the name selector matches name links and avatar image links
 				//so this checks that there is only one (text) child node
 				nameFilter : function (anchor) {
@@ -27,6 +28,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				nameSelector : 'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard]' +
 					',  span.profileName',
+				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					return ( anchor.childNodes.length === 1 &&
 							 anchor.firstChild.nodeType === Node.TEXT_NODE );
@@ -48,6 +50,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			unused : []
 		},
 		nameMap = {}, //where names will go as we assign them
+		nameSalt = 'afon_', //this is so I don't overwrite something in nameMap prototype 
 
 		setConf = function () {
 			if (host === 'plus.google.com') { conf = services.google; }
@@ -77,8 +80,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		 * @return String aliasPart alias for the namePart
 		 */
 		getAlias = function (namePart, aliases) {
-			var mySalt = 'afon_', //this is so I don't overwrite something important
-				nKey = mySalt + namePart;
+			var nKey = nameSalt+ namePart;
 			//if it's not already mapped...
 			if (!nameMap.hasOwnProperty(nKey)) {
 				//make sure unused isn't empty
@@ -111,7 +113,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				    firstName = fullNameStr.match(/^[\S]+/), //try \S
 					newFirstName = getAlias(firstName, fNames),
 					newFullNameStr = newFirstName;
-				if (firstName !== fullNameStr) { //Not Cher or Madonna
+				if (firstName != fullNameStr) { //Not Cher or Madonna
 					var lastName = fullNameStr.match(/[\S]+$/),
 						newLastName = getAlias(lastName, lNames);
 					newFullNameStr +=  ' ' + newLastName;
@@ -135,7 +137,35 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				newSrc = imgHashService + avatar.attributes[conf.hashAttribute].value + salt;
 				avatar.src = newSrc;
 			}
-		};
+		},
+		fixTextblocks = function(blocks){
+			var i,
+				block,
+				newBlock,
+				nKey,
+				namePart,
+				alias,
+				namePattern;
+			// foreach comment
+			for (i = 0; i < blocks.length; i++) {
+				block = blocks[i];
+				// foreach alias
+				for (var saltedNamePart in nameMap) {
+					if(nameMap.hasOwnProperty(saltedNamePart)){
+						//remove the nameSalt
+						namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
+						alias = nameMap[saltedNamePart];
+						//replace name
+						namePattern = RegExp('\\b(' + namePart + ')\\b',
+							"gim");
+						newBlock = block.innerHTML.replace(namePattern,alias);
+						// replace it in the comments
+						block.innerHTML = newBlock;
+					}
+				}
+			}
+		}
+		;
 			
 	//initialization
 	fNames.all = fNames.all.sort(
@@ -154,13 +184,19 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			if (!conf) { setConf(); }
 
 			var avatars = window.document.querySelectorAll(conf.avatarSelector),
-			    names = window.document.querySelectorAll(conf.nameSelector);
+			    names = window.document.querySelectorAll(conf.nameSelector),
+				textBlocks = false;
 
 			fixNames(names);
 			fixAvatars(avatars);
 
+			if (conf.textblockSelector){
+			    textBlocks = window.document.querySelectorAll(conf.textblockSelector);
+				fixTextblocks( textBlocks ); 
+			}
+
 			return true;
-		} //dIt()
+		} //doIt()
 	}; // PUBLICS
 })(window, Math, Node);
 
