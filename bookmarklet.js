@@ -141,14 +141,17 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		fixTextblocks = function(blocks){
 			var i,
 				block,
-				newBlock,
-				nKey,
+				blockText,
+				newBlockText,
 				namePart,
 				alias,
-				namePattern;
+				namePattern,
+				blockChanged;
 			// foreach comment
 			for (i = 0; i < blocks.length; i++) {
 				block = blocks[i];
+				newBlockText = blockText = block.innerHTML;
+				blockChanged = false;
 				// foreach alias
 				for (var saltedNamePart in nameMap) {
 					if(nameMap.hasOwnProperty(saltedNamePart)){
@@ -158,10 +161,12 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 						//replace name
 						namePattern = RegExp('\\b(' + namePart + ')\\b',
 							"gim");
-						newBlock = block.innerHTML.replace(namePattern,alias);
-						// replace it in the comments
-						block.innerHTML = newBlock;
+						newBlockText = newBlockText.replace(namePattern,alias);
 					}
+				}
+				// replace it in the comments IF changed
+				if (blockText !== newBlockText) {
+					block.innerHTML = newBlockText;
 				}
 			}
 		}
