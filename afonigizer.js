@@ -127,7 +127,8 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			//Replace the profile pic with a robot pic
 			var i,
 			    avatar,
-				newSrc;
+				newSrc,
+				success = false;
 			for (i = 0; i < avatars.length; i++) {
 				avatar = avatars.item(i);
 				//don't reconvert anything
@@ -142,6 +143,12 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				//generate image based on profile image src.
 				newSrc = imgHashService + newSrc;
 				avatar.src = newSrc;
+				avatar.onerror = function(){
+					var that = this,
+						imgSrc = that.src;
+					that.src = imgSrc;
+					console.log(that);
+				}
 			}
 		},
 		fixTextblocks = function(blocks){
@@ -206,7 +213,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				fixTextblocks( textBlocks ); 
 			}
 
-			return false;
+			return true;
 		} //doIt()
 	}; // PUBLICS
 })(window, Math, Node);
