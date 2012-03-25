@@ -30,8 +30,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					',  span.profileName',
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
+					console.log(anchor.href.match(/^https:\/\/www.facebook.com\//) === null);
 					return ( anchor.childNodes.length === 1 &&
-							 anchor.firstChild.nodeType === Node.TEXT_NODE );
+							 anchor.firstChild.nodeType === Node.TEXT_NODE &&
+							 anchor.href.match(/^http(?:s):\/\/www.facebook.com\//) === null
+							 );
 				},
 				hashAttribute : 'src'
 			}
