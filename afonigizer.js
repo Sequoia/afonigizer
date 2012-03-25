@@ -30,11 +30,13 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					',  span.profileName',
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
-					console.log(anchor.href.match(/^https:\/\/www.facebook.com\//) === null);
-					return ( anchor.childNodes.length === 1 &&
-							 anchor.firstChild.nodeType === Node.TEXT_NODE &&
-							 anchor.href.match(/^http(?:s):\/\/www.facebook.com\//) === null
-							 );
+					var success = ( anchor.childNodes.length === 1 &&
+						anchor.firstChild.nodeType === Node.TEXT_NODE );
+					if ( success && anchor.hasOwnProperty('href') ) {
+						//skip fb pages
+						success = (anchor.href.match(/^http(?:s):\/\/www.facebook.com\/pages/) === null);
+					}
+					return success;
 				},
 				hashAttribute : 'src'
 			}
@@ -48,7 +50,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		},
 		lNames = {
 			all : [
-				"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100" 
+				"Pencil", "Window", "Earwax", "Tendril", "Larynx", "Parcel", "Ticket", "Gutter", "Axiom", "Chestnut", "Panel", "Rooftop", "Tomato", "Pickle", "Sandwich", "Powder", "Smoke", "Zipper", "Vessel", "Cart", "Bead", "Beam", "Apparatus", "Bomb", "Teardrop", "Fence", "Ascot", "Forgery", "Temptation", "Principal", "Venture", "Staircase", "Tumult", "Elevator", "Ball", "Corner", "Dart", "Elephant", "Face", "Giant", "Garage", "Harvest", "Interval", "Joint", "Knot", "Lemon", "Marble", "Needle", "Owl", "Plantation", "Quince", "Rabbit", "Rainstorm", "Railway", "Sack", "Seashore", "Scarecrow", "Tooth", "Time", "Theory", "Umbrella", "Unit", "Vollyball", "Volcano", "Visitor", "Whip", "Whistle", "Wilderness", "Yak", "Yam", "Yard", "Yarn", "Year", "Yoke", "Zephyr", "Zoo", "Animorph", "Pokémon", "Dinosaucer", "Ponycorn", "Blueshift", "Plate", "Platter", "Parry", "Car", "Busstop", "Clock", "Fridge", "Spoon", "Drawer", "Bagel", "Creamcheese", "Gat", "RADAR", "Kite", "Turnstile", "Porchlight", "Balcony", "Jackalope", "Fingerling"
 			],
 			unused : []
 		},
@@ -150,7 +152,6 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					var that = this,
 						imgSrc = that.src;
 					that.src = imgSrc;
-					console.log(that);
 				}
 			}
 		},

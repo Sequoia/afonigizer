@@ -6,8 +6,6 @@ Currently, to use it, you paste it into your console in Firefox, Chrome, or
 Opera *and then* ```afonigizer.doIt()```.  to bookmarkletify, put the script and the doIt call in an link href, but wrap the doIt call in ```void()```.
 
 ###To do
-* -get first names list- shorten this list to ~100
-* get last names list (nouns).
 * randomize names list better
 * add a demo screenshot
 * check it in g+ again
