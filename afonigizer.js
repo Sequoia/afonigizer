@@ -50,7 +50,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		},
 		lNames = {
 			all : [
-				"Pencil", "Window", "Earwax", "Tendril", "Larynx", "Parcel", "Ticket", "Gutter", "Axiom", "Chestnut", "Panel", "Rooftop", "Tomato", "Pickle", "Sandwich", "Powder", "Smoke", "Zipper", "Vessel", "Cart", "Bead", "Beam", "Apparatus", "Bomb", "Teardrop", "Fence", "Ascot", "Forgery", "Temptation", "Principal", "Venture", "Staircase", "Tumult", "Elevator", "Ball", "Corner", "Dart", "Elephant", "Face", "Giant", "Garage", "Harvest", "Interval", "Joint", "Knot", "Lemon", "Marble", "Needle", "Owl", "Plantation", "Quince", "Rabbit", "Rainstorm", "Railway", "Sack", "Seashore", "Scarecrow", "Tooth", "Time", "Theory", "Umbrella", "Unit", "Vollyball", "Volcano", "Visitor", "Whip", "Whistle", "Wilderness", "Yak", "Yam", "Yard", "Yarn", "Year", "Yoke", "Zephyr", "Zoo", "Animorph", "Pokémon", "Dinosaucer", "Ponycorn", "Blueshift", "Plate", "Platter", "Parry", "Car", "Busstop", "Clock", "Fridge", "Spoon", "Drawer", "Bagel", "Creamcheese", "Gat", "RADAR", "Kite", "Turnstile", "Porchlight", "Balcony", "Jackalope", "Fingerling"
+				"Pencil", "Window", "Earwax", "Tendril", "Larynx", "Parcel", "Ticket", "Gutter", "Axiom", "Chestnut", "Panel", "Rooftop", "Tomato", "Pickle", "Sandwich", "Powder", "Smoke", "Zipper", "Vessel", "Cart", "Bead", "Beam", "Apparatus", "Bomb", "Teardrop", "Fence", "Ascot", "Forgery", "Temptation", "Principal", "Venture", "Staircase", "Tumult", "Elevator", "Ball", "Corner", "Dart", "Elephant", "Face", "Giant", "Garage", "Harvest", "Interval", "Joint", "Knot", "Lemon", "Marble", "Needle", "Owl", "Plantation", "Quince", "Rabbit", "Rainstorm", "Railway", "Sack", "Seashore", "Scarecrow", "Tooth", "Time", "Theory", "Umbrella", "Unit", "Vollyball", "Volcano", "Visitor", "Whip", "Whistle", "Wilderness", "Yak", "Yam", "Yard", "Yarn", "Year", "Yoke", "Zephyr", "Zoo", "Animorph", "Teletype", "Dinosaucer", "Ponycorn", "Blueshift", "Plate", "Platter", "Parry", "Car", "Busstop", "Clock", "Fridge", "Spoon", "Drawer", "Bagel", "Creamcheese", "Gat", "RADAR", "Kite", "Turnstile", "Porchlight", "Balcony", "Jackalope", "Fingerling"
 			],
 			unused : []
 		},
@@ -103,7 +103,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		fixNames = function (names) {
 			var i;
 			for (i = 0; i < names.length; i++) {
-
+				//@todo make this a function w/public accessor
 				var fullName = names.item(i);
 				//if a nameFilter function exists and it returns false, it's not a name
 				if ( 
@@ -135,6 +135,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				newSrc,
 				success = false;
 			for (i = 0; i < avatars.length; i++) {
+				//@todo make this a function w/public accessor
 				avatar = avatars.item(i);
 				//don't reconvert anything
 				if (checkDone(avatar)) { continue; }
@@ -166,6 +167,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				blockChanged;
 			// foreach comment
 			for (i = 0; i < blocks.length; i++) {
+				//@todo make this a function w/public accessor
 				block = blocks[i];
 				newBlockText = blockText = block.innerHTML;
 				blockChanged = false;
@@ -186,16 +188,28 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					block.innerHTML = newBlockText;
 				}
 			}
+		},
+		/**
+		 * an "ok" shuffle/randomization
+		 * shuffle/reverse a few times
+		 */
+		_mixUp = function (anArray) {
+			var iterations = Math.floor(Math.random() * 3) + 3,
+				i;
+			for (i = 0; i < iterations; i++){
+				anArray.sort ( function () {
+						return (Math.round(Math.random()) - 0.5); 
+					} );
+				anArray.reverse();
+			}
+			return anArray;
 		}
 		;
 			
 	//initialization
-	fNames.all = fNames.all.sort(
-		function () {return (Math.round(Math.random()) - 0.5); }
-	);
-	lNames.all = lNames.all.sort(
-		function () {return (Math.round(Math.random()) - 0.5); }
-	);
+	fNames.all = _mixUp(fNames.all);
+	lNames.all = _mixUp(lNames.all);
+
 	fNames.unused = fNames.all.slice(0); //copy the array
 	lNames.unused = lNames.all.slice(0); //copy the array
 
