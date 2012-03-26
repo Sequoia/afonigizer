@@ -33,8 +33,10 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					var success = ( anchor.childNodes.length === 1 &&
 						anchor.firstChild.nodeType === Node.TEXT_NODE );
 					if ( success && anchor.hasOwnProperty('href') ) {
-						//skip fb pages
-						success = (anchor.href.match(/^http(?:s):\/\/www.facebook.com\/pages/) === null);
+						//skip fb pages (doesn't work on vanity urls)
+						success = (anchor.href.match(/^http[s]?:\/\/www.facebook.com\/pages\//) === null);
+						//skip music
+						success = (anchor.href.match(/^http[s]?:\/\/www.facebook.com\/music\//) === null);
 					}
 					return success;
 				},
