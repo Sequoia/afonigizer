@@ -166,7 +166,8 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				namePart,
 				alias,
 				namePattern,
-				blockChanged;
+				blockChanged,
+				commonWordsPtrn = /^(?:the|be|to|of|and|a|in|that|have|I|it|for|not|on|with|he|as|you|do|at|this|but|his|by|from|they|we|say|her|she|or|an|will|my|one|all|would|there|their|what|so|up|out|if|about|who|get|which|go|me|when|make|can|like|time|no|just|him|know|take|person|into|year|your|good|some|could|them|see|other|than|then|now|look|only|come|its|over|think|also|back|after|use|two|how|our|work|first|well|way|even|new|want|because|any|these|give|day|most|us)$/i;
 			// foreach comment
 			for (i = 0; i < blocks.length; i++) {
 				//@todo make this a function w/public accessor
@@ -175,9 +176,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				blockChanged = false;
 				// foreach alias
 				for (var saltedNamePart in nameMap) {
-					if(nameMap.hasOwnProperty(saltedNamePart)){
+					if (nameMap.hasOwnProperty(saltedNamePart)) {
 						//remove the nameSalt
 						namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
+						//skip if it's one of the common words
+						if (commonWordsPtrn.test(namePart)) { continue; }
 						alias = nameMap[saltedNamePart];
 						//replace name
 						namePattern = RegExp('\\b(' + namePart + ')\\b',
