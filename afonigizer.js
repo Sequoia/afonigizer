@@ -28,7 +28,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					+ ', img[itemprop=photo]',
 				nameSelector : 'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard]' +
-					',  span.profileName',
+					',  span.profileName, span.fwb a, div.friendSubtitle a',
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
