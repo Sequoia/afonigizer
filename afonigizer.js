@@ -24,7 +24,8 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				hashAttribute : 'oid'
 			},
 			facebook : {
-				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic',
+				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic'
+					+ ', img[itemprop=photo]',
 				nameSelector : 'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard]' +
 					',  span.profileName',
