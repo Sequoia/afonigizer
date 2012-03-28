@@ -5,6 +5,8 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 	//image generated based on the hash
 	var imgHashService = 'http://static1.robohash.com/',
 		host = window.location.hostname,
+		locked = false, //flag that the doIt process is currently running
+		requested = false, //flag that the doIt process has been requested
 		salt = Math.random().toPrecision(3),
 		conf = false, // will hold the service
 		services = {
@@ -221,7 +223,23 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 
 	/* PUBLICS */
 	return {
+		requestIt : function(){
+			console.log(1);
+			if (requested){
+				console.log(2);
+				return false;
+			}
+			if (locked) {
+				console.log(3);
+				requested = true;
+				return true;
+			}
+				console.log(4);
+			//not requested, not locked
+			this.doIt();
+		},
 		doIt : function () {
+			locked = true;
 			//load the conf for the site we're on
 			if (!conf) { setConf(); }
 
@@ -236,7 +254,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			    textBlocks = window.document.querySelectorAll(conf.textblockSelector);
 				fixTextblocks( textBlocks ); 
 			}
-
+			if(requested){
+				requested = false;
+				this.doIt();
+			}
+			locked = false;
 			return true;
 		} //doIt()
 	}; // PUBLICS
