@@ -35,7 +35,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					', .fbChatOrderedList .item a .name' + //chat sidebar
 					', .headerTinymanName' + //top navbar name
 					', .fbxWelcomeBoxName' + //top left column user's name
-					', .fbReminders .fbRemindersStory .fbRemindersTitle', //birthday's &c.
+					', .fbReminders .fbRemindersStory .fbRemindersTitle strong', //birthday's &c.
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
