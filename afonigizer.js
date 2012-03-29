@@ -26,12 +26,16 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			facebook : {
 				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic' +
 					', img[itemprop=photo]' +
+					', .fbxWelcomeBoxImg' + //top left column user's avatar 
 					', .fbChatOrderedList .item a .pic', //chat sidebar
 				nameSelector : 'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard], span.blueName' +
 					', span.profileName, span.fwb a, div.friendSubtitle a, a[itemprop=name]' +
 					', .fbMercuryChatTab .titlebar .titlebarText' + //chat title bar
-					', .fbChatOrderedList .item a .name',  //chat sidebar
+					', .fbChatOrderedList .item a .name' + //chat sidebar
+					', .headerTinymanName' + //top navbar name
+					', .fbxWelcomeBoxName' + //top left column user's name
+					', .fbReminders .fbRemindersStory .fbRemindersTitle', //birthday's &c.
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
