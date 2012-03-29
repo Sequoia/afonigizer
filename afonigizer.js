@@ -186,8 +186,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 						if (commonWordsPtrn.test(namePart)) { continue; }
 						alias = nameMap[saltedNamePart];
 						//replace name
-						namePattern = RegExp('\\b(' + namePart + ')\\b',
-							"gim");
+						namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b', "gim");
 						newBlockText = newBlockText.replace(namePattern,alias);
 					}
 				}
