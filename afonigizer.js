@@ -24,11 +24,14 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				hashAttribute : 'oid'
 			},
 			facebook : {
-				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic'
-					+ ', img[itemprop=photo]',
+				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic' +
+					', img[itemprop=photo]' +
+					', .fbChatOrderedList .item a .pic', //chat sidebar
 				nameSelector : 'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard], span.blueName' +
-					', span.profileName, span.fwb a, div.friendSubtitle a, a[itemprop=name]',
+					', span.profileName, span.fwb a, div.friendSubtitle a, a[itemprop=name]' +
+					', .fbMercuryChatTab .titlebar .titlebarText' + //chat title bar
+					', .fbChatOrderedList .item a .name',  //chat sidebar
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
@@ -144,10 +147,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				if (checkDone(avatar)) { continue; }
 
 				//generate hash based on src attr. & salt
-				newSrc = parseInt(avatar.attributes[conf.hashAttribute].value
+				newSrc = String(avatar.attributes[conf.hashAttribute].value
 				         .match(/([\d]+)/g)
-						 .join(""));
-				newSrc = newSrc * salt; //salt is a random number
+						 .join("")
+						 ).substring(0,10);
+				newSrc = (newSrc * salt); //salt is a random number
 
 				//generate image based on profile image src.
 				newSrc = imgHashService + newSrc;
@@ -184,7 +188,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 						if (commonWordsPtrn.test(namePart)) { continue; }
 						alias = nameMap[saltedNamePart];
 						//replace name
-						namePattern = RegExp('\\b(' + namePart + ')\\b',
+						namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
 							"gim");
 						newBlockText = newBlockText.replace(namePattern,alias);
 					}
