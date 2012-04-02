@@ -64,7 +64,9 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			],
 			unused : []
 		},
-		commonWordsPtrn = /^(?:the|be|to|of|and|a|in|that|have|I|it|for|not|on|with|he|as|you|do|at|this|but|his|by|from|they|we|say|her|she|or|an|will|my|one|all|would|there|their|what|so|up|out|if|about|who|get|which|go|me|when|make|can|like|time|no|just|him|know|take|person|into|year|your|good|some|could|them|see|other|than|then|now|look|only|come|its|over|think|also|back|after|use|two|how|our|work|first|well|way|even|new|want|because|any|these|give|day|most|us)$/i,
+		//common words also matches any single character
+		//(don't match the "t" in "don't", even if someone's name is "T")
+		commonWordsPtrn = /^(?:the|be|to|of|and|a|in|that|have|I|it|for|not|on|with|he|as|you|do|at|this|but|his|by|from|they|we|say|her|she|or|an|will|my|one|all|would|there|their|what|so|up|out|if|about|who|get|which|go|me|when|make|can|like|time|no|just|him|know|take|person|into|year|your|good|some|could|them|see|other|than|then|now|look|only|come|its|over|think|also|back|after|use|two|how|our|work|first|well|way|even|new|want|because|any|these|give|day|most|us|[\w])$/i,
 		nameMap = {}, //where names will go as we assign them
 		nameSalt = 'afon_', //this is so I don't overwrite something in nameMap prototype 
 
