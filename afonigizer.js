@@ -60,10 +60,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		},
 		lNames = {
 			all : [
-				"Pencil", "Window", "Earwax", "Tendril", "Larynx", "Parcel", "Ticket", "Gutter", "Axiom", "Chestnut", "Panel", "Rooftop", "Tomato", "Pickle", "Sandwich", "Powder", "Smoke", "Zipper", "Vessel", "Cart", "Bead", "Beam", "Apparatus", "Bomb", "Teardrop", "Fence", "Ascot", "Forgery", "Temptation", "Principal", "Venture", "Staircase", "Tumult", "Elevator", "Ball", "Corner", "Dart", "Elephant", "Face", "Giant", "Garage", "Harvest", "Interval", "Joint", "Knot", "Lemon", "Marble", "Needle", "Owl", "Plantation", "Quince", "Rabbit", "Rainstorm", "Railway", "Sack", "Seashore", "Scarecrow", "Tooth", "Time", "Theory", "Umbrella", "Unit", "Vollyball", "Volcano", "Visitor", "Whip", "Whistle", "Wilderness", "Yak", "Yam", "Yard", "Yarn", "Year", "Yoke", "Zephyr", "Zoo", "Animorph", "Teletype", "Dinosaucer", "Ponycorn", "Blueshift", "Plate", "Platter", "Parry", "Car", "Busstop", "Clock", "Fridge", "Spoon", "Drawer", "Bagel", "Creamcheese", "Gat", "RADAR", "Kite", "Turnstile", "Porchlight", "Balcony", "Jackalope", "Fingerling"
+				"Pencil", "Window", "Earwax", "Tendril", "Larynx", "Parcel", "Ticket", "Gutter", "Axiom", "Chestnut", "Panel", "Rooftop", "Tomato", "Pickle", "Sandwich", "Powder", "Smoke", "Zipper", "Vessel", "Cart", "Bead", "Beam", "Apparatus", "Bomb", "Teardrop", "Fence", "Ascot", "Forgery", "Temptation", "Principal", "Venture", "Staircase", "Tumult", "Elevator", "Ball", "Corner", "Dart", "Elephant", "Face", "Giant", "Garage", "Harvest", "Interval", "Joint", "Knot", "Lemon", "Marble", "Needle", "Owl", "Plantation", "Quince", "Rabbit", "Rainstorm", "Railway", "Sack", "Seashore", "Scarecrow", "Tooth", "Time", "Theory", "Umbrella", "Unit", "Vollyball", "Volcano", "Visitor", "Whip", "Whistle", "Wilderness", "Yak", "Yam", "Yard", "Yarn", "Year", "Yoke", "Zephyr", "Zoo", "Animorph", "Teletype", "Dinosaucer", "Ponycorn", "Blueshift", "Plate", "Platter", "Parry", "Car", "Busstop", "Clock", "Fridge", "Spoon", "Drawer", "Bagel", "Creamcheese", "Gat", "RADAR", "Kite", "Turnstile", "Porchlight", "Balcony", "Jackalope", "Fingerling", "Cupcake", "Candlestick", "Goldfish"
 			],
 			unused : []
 		},
+		commonWordsPtrn = /^(?:the|be|to|of|and|a|in|that|have|I|it|for|not|on|with|he|as|you|do|at|this|but|his|by|from|they|we|say|her|she|or|an|will|my|one|all|would|there|their|what|so|up|out|if|about|who|get|which|go|me|when|make|can|like|time|no|just|him|know|take|person|into|year|your|good|some|could|them|see|other|than|then|now|look|only|come|its|over|think|also|back|after|use|two|how|our|work|first|well|way|even|new|want|because|any|these|give|day|most|us)$/i,
 		nameMap = {}, //where names will go as we assign them
 		nameSalt = 'afon_', //this is so I don't overwrite something in nameMap prototype 
 
@@ -125,11 +126,11 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 
 				var fullNameStr = fullName.innerHTML,
 				//explode the name. drop middle names.
-				    firstName = fullNameStr.match(/^[\S]+/), //try \S
+				    firstName = fullNameStr.match(/^(?:[^\s\w]+)?([\w]+)/)[1],
 					newFirstName = getAlias(firstName, fNames),
 					newFullNameStr = newFirstName;
 				if (firstName != fullNameStr) { //Not Cher or Madonna
-					var lastName = fullNameStr.match(/[\S]+$/),
+					var lastName = fullNameStr.match(/([\w]+)(?:[\S]+)?$/)[1],
 						newLastName = getAlias(lastName, lNames);
 					newFullNameStr +=  ' ' + newLastName;
 				}
@@ -175,8 +176,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				namePart,
 				alias,
 				namePattern,
-				blockChanged,
-				commonWordsPtrn = /^(?:the|be|to|of|and|a|in|that|have|I|it|for|not|on|with|he|as|you|do|at|this|but|his|by|from|they|we|say|her|she|or|an|will|my|one|all|would|there|their|what|so|up|out|if|about|who|get|which|go|me|when|make|can|like|time|no|just|him|know|take|person|into|year|your|good|some|could|them|see|other|than|then|now|look|only|come|its|over|think|also|back|after|use|two|how|our|work|first|well|way|even|new|want|because|any|these|give|day|most|us)$/i;
+				blockChanged;
 			// foreach comment
 			for (i = 0; i < blocks.length; i++) {
 				//@todo make this a function w/public accessor
