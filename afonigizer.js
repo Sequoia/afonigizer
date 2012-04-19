@@ -94,12 +94,22 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		 * Recieve a name, return an alias
 		 * if no alias exists, assign a new one
 		 * @param String namePart first or last name
-		 * @param Object aliases {all, unused}
-		 *        aliases to draw from
+		 * @param firstOrLast accepts 'first' or 'last'
+		 *        determines which internal name list to use
 		 * @return String aliasPart alias for the namePart
 		 */
-		getAlias = function (namePart, aliases) {
-			var nKey = nameSalt+ namePart;
+		getAlias = function (namePart, firstOrLast) {
+			var nKey = nameSalt + namePart,
+					aliases;
+			
+			if (firstOrLast === 'first'){
+					aliases = fNames;
+			} else if(firstOrLast === 'last') {
+					aliases = lNames;
+			} else {
+					throw "getAlias requires 'first' or 'last' for firstOrLast parameter";
+			}
+
 			//if it's not already mapped...
 			if (!nameMap.hasOwnProperty(nKey)) {
 				//make sure unused isn't empty
@@ -117,7 +127,6 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		fixNames = function (names) {
 			var i;
 			for (i = 0; i < names.length; i++) {
-				//@todo make this a function w/public accessor
 				var fullName = names.item(i);
 				//if a nameFilter function exists and it returns false, it's not a name
 				if ( 
@@ -128,19 +137,24 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				if (checkDone(fullName)) { continue; }
 
 				var fullNameStr = fullName.innerHTML,
-				//explode the name. drop middle names.
-				    firstName = fullNameStr.match(/^(?:[^\s\w]+)?([\w]+)/)[1],
-					newFirstName = getAlias(firstName, fNames),
-					newFullNameStr = newFirstName;
-				if (firstName != fullNameStr) { //Not Cher or Madonna
-					var lastName = fullNameStr.match(/([\w]+)(?:[\S]+)?$/)[1],
-						newLastName = getAlias(lastName, lNames);
-					newFullNameStr +=  ' ' + newLastName;
-				}
+						newFullNameStr = fixFullName(fullNameStr);
+
 				//replace the name on the page
 				fullName.innerHTML = newFullNameStr;
 				
 			}
+		},
+		fixFullName = function (fullNameStr) {
+				//explode the name. drop middle names.
+					var firstName = fullNameStr.match(/^(?:[^\s\w]+)?([\w]+)/)[1],
+					newFirstName = getAlias(firstName, 'first'),
+					newFullNameStr = newFirstName;
+				if (firstName != fullNameStr) { //Not Cher or Madonna
+					var lastName = fullNameStr.match(/([\w]+)(?:[\S]+)?$/)[1],
+						newLastName = getAlias(lastName, 'last');
+					newFullNameStr +=  ' ' + newLastName;
+				}
+				return newFullNameStr;
 		},
 		fixAvatars = function (avatars) {
 			//Replace the profile pic with a robot pic
@@ -164,6 +178,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				//generate image based on profile image src.
 				newSrc = imgHashService + newSrc;
 				avatar.src = newSrc;
+				//this reapplies the new source if errors occur
 				avatar.onerror = function(){
 					var that = this,
 						imgSrc = that.src;
@@ -175,34 +190,41 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			var i,
 				block,
 				blockText,
-				newBlockText,
+				newBlockText;
+			// foreach comment
+				for (i = 0; i < blocks.length; i++) {
+						//@todo make this a function w/public accessor
+						block = blocks[i];
+						blockText = block.innerHTML;
+						newBlockText = fixTextBlock( blockText );
+						// replace it in the comments IF changed
+						if( newBlockText !== false ){
+								block.innerHTML = newBlockText;
+						}
+				}
+		},
+		fixTextBlock = function( blockText ){
+			var newBlockText = blockText,
 				namePart,
 				alias,
-				namePattern,
-				blockChanged;
-			// foreach comment
-			for (i = 0; i < blocks.length; i++) {
-				//@todo make this a function w/public accessor
-				block = blocks[i];
-				newBlockText = blockText = block.innerHTML;
-				blockChanged = false;
-				// foreach alias
-				for (var saltedNamePart in nameMap) {
-					if (nameMap.hasOwnProperty(saltedNamePart)) {
-						//remove the nameSalt
-						namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
-						//skip if it's one of the common words
-						if (commonWordsPtrn.test(namePart)) { continue; }
-						alias = nameMap[saltedNamePart];
-						//replace name
-						namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
-							"gim");
-						newBlockText = newBlockText.replace(namePattern,alias);
-					}
+				namePattern;
+			// foreach alias
+			for (var saltedNamePart in nameMap) {
+				if (nameMap.hasOwnProperty(saltedNamePart)) {
+					//remove the nameSalt
+					namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
+					//skip if it's one of the common words
+					if (commonWordsPtrn.test(namePart)) { continue; }
+					alias = nameMap[saltedNamePart];
+					//replace name
+					namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
+						"gim");
+					newBlockText = newBlockText.replace(namePattern,alias);
 				}
-				// replace it in the comments IF changed
 				if (blockText !== newBlockText) {
-					block.innerHTML = newBlockText;
+						return newBlockText;
+				} else {
+						return false; //nothing changed
 				}
 			}
 		},
@@ -232,6 +254,43 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 
 	/* PUBLICS */
 	return {
+
+		/** return an alias for a full name 
+		 *  @param String fullNameStr full name
+		 *  @return String afonigized full name
+		 */
+		alias : function(fullNameStr){
+				return fixFullName(fullNameStr);
+		},
+
+		/** return an aliased name part
+		 *  @param String namePartStr single name part (first or last)
+		 *  @param String firstOrLast accepts 'first' or 'last'
+		 *  @return String afonigized name part
+		 */
+		aliasPart : function( namePartStr, firstOrLast ){
+				return getAlias( namePartStr, firstOrLast );
+		},
+
+		/** return an afonigized text block
+		 *  @param String text block
+		 *  @return String afonigized text block
+		 */
+		// textBlock : function(){}, //@todo
+
+		/** return an afonigized avatar src
+		 *  @param String image node 
+		 *  @return void
+		 */
+		// avatarSrc : function(){}, //@todo
+
+		/** replace an image's src with an afonigized src 
+		 *  @param Node image node 
+		 *  @return void
+		 */
+		// fixAvatar : function(){}, //@todo
+		// configure : function(){}, //@todo pass site config in for doIt
+		//                           //full page afonigization
 		doIt : function () {
 			//load the conf for the site we're on
 			if (!conf) { setConf(); }
