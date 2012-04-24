@@ -73,7 +73,9 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 
 		setConf = function () {
 			if (host === 'plus.google.com') { conf = services.google; }
-			else if (host === 'www.facebook.com') { conf = services.facebook; }
+			//@todo pass this in.  setting thus for now to allow local testing
+			else { conf = services.facebook; }
+			//else if (host === 'www.facebook.com') { conf = services.facebook; }
 		},
 		
 		/*
@@ -193,14 +195,16 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 				newBlockText;
 			// foreach comment
 				for (i = 0; i < blocks.length; i++) {
-						//@todo make this a function w/public accessor
-						block = blocks[i];
-						blockText = block.innerHTML;
-						newBlockText = fixTextBlock( blockText );
-						// replace it in the comments IF changed
-						if( newBlockText !== false ){
-								block.innerHTML = newBlockText;
-						}
+					//@todo make this a function w/public accessor
+					block = blocks[i];
+					blockText = block.innerHTML;
+					//console.log( blockText );
+					newBlockText = fixTextBlock( blockText );
+					// replace it in the comments IF changed
+					if( newBlockText !== false ){
+						//console.log(newBlockText);
+						block.innerHTML = newBlockText;
+					}
 				}
 		},
 		fixTextBlock = function( blockText ){
@@ -214,18 +218,21 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 					//remove the nameSalt
 					namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
 					//skip if it's one of the common words
+					//console.log(">>" + namePart);
 					if (commonWordsPtrn.test(namePart)) { continue; }
+					//console.log("<<" + namePart);
 					alias = nameMap[saltedNamePart];
+					//remove the nameSalt
 					//replace name
 					namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
 						"gim");
 					newBlockText = newBlockText.replace(namePattern,alias);
 				}
-				if (blockText !== newBlockText) {
-						return newBlockText;
-				} else {
-						return false; //nothing changed
-				}
+			}
+			if (blockText !== newBlockText) {
+					return newBlockText;
+			} else {
+					return false; //nothing changed
 			}
 		},
 		/**
@@ -259,8 +266,8 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		 *  @param String fullNameStr full name
 		 *  @return String afonigized full name
 		 */
-		alias : function(fullNameStr){
-				return fixFullName(fullNameStr);
+		alias : function( fullNameStr ){
+			return fixFullName(fullNameStr);
 		},
 
 		/** return an aliased name part
@@ -269,14 +276,15 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		 *  @return String afonigized name part
 		 */
 		aliasPart : function( namePartStr, firstOrLast ){
-				return getAlias( namePartStr, firstOrLast );
+			return getAlias( namePartStr, firstOrLast );
 		},
 
 		/** return an afonigized text block
 		 *  @param String text block
 		 *  @return String afonigized text block
 		 */
-		// textBlock : function(){}, //@todo
+		textBlock : function( textBlock ){
+		},
 
 		/** return an afonigized avatar src
 		 *  @param String image node 
