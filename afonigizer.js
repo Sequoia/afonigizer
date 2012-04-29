@@ -1,10 +1,9 @@
-var afonigizer = afonigizer || (function (window, Math, Node) {
+var afonigizer = afonigizer || (function (Math, Node) {
 	'use strict';
 	/* PRIVATES */
 	//imgHashService hashes a string and returns a robot
 	//image generated based on the hash
 	var imgHashService = 'http://static1.robohash.com/',
-		host = window.location.hostname,
 		salt = Math.random().toPrecision(3),
 		conf = false, // will hold the service
 		services = {
@@ -71,7 +70,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		nameMap = {}, //where names will go as we assign them
 		nameSalt = 'afon_', //this is so I don't overwrite something in nameMap prototype 
 
-		setConf = function () {
+		setConf = function (host) {
 			if (host === 'plus.google.com') { conf = services.google; }
 			//@todo pass this in.  setting thus for now to allow local testing
 			else { conf = services.facebook; }
@@ -284,6 +283,7 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		 *  @return String afonigized text block
 		 */
 		textBlock : function( textBlock ){
+			return fixTextBlock( textBlock );
 		},
 
 		/** return an afonigized avatar src
@@ -299,9 +299,10 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 		// fixAvatar : function(){}, //@todo
 		// configure : function(){}, //@todo pass site config in for doIt
 		//                           //full page afonigization
-		doIt : function () {
+		doIt : function (window) {
 			//load the conf for the site we're on
-			if (!conf) { setConf(); }
+			var host = window.location.hostname;
+			if (!conf) { setConf(host); }
 
 			var avatars = window.document.querySelectorAll(conf.avatarSelector),
 			    names = window.document.querySelectorAll(conf.nameSelector),
@@ -318,4 +319,4 @@ var afonigizer = afonigizer || (function (window, Math, Node) {
 			return true;
 		} //doIt()
 	}; // PUBLICS
-})(window, Math, Node);
+})(Math, Node);
