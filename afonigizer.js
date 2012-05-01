@@ -95,7 +95,7 @@ var afonigizer = afonigizer || (function (Math, Node) {
 		 * Recieve a name, return an alias
 		 * if no alias exists, assign a new one
 		 * @param String namePart first or last name
-		 * @param firstOrLast accepts 'first' or 'last'
+		 * @param firstOrLast accepts "first" or "last"
 		 *        determines which internal name list to use
 		 * @return String aliasPart alias for the namePart
 		 */
@@ -108,7 +108,7 @@ var afonigizer = afonigizer || (function (Math, Node) {
 			} else if(firstOrLast === 'last') {
 					aliases = lNames;
 			} else {
-					throw "getAlias requires 'first' or 'last' for firstOrLast parameter";
+					throw "getAlias requires [first] or [last] for firstOrLast parameter";
 			}
 
 			//if it's not already mapped...
