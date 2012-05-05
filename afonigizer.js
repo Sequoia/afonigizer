@@ -1,9 +1,10 @@
-var afonigizer = afonigizer || (function (Math, Node) {
+function Afonigizer(Math, Node) {
 	'use strict';
 	/* PRIVATES */
 	//imgHashService hashes a string and returns a robot
 	//image generated based on the hash
 	var imgHashService = 'http://static1.robohash.com/',
+		imgHashSuffix = '?size=50x50',
 		salt = Math.random().toPrecision(3),
 		conf = false, // will hold the service
 		services = {
@@ -177,7 +178,7 @@ var afonigizer = afonigizer || (function (Math, Node) {
 				newSrc = (newSrc * salt); //salt is a random number
 
 				//generate image based on profile image src.
-				newSrc = imgHashService + newSrc;
+				newSrc = imgHashService + newSrc + imgHashSuffix;
 				avatar.src = newSrc;
 				//this reapplies the new source if errors occur
 				avatar.onerror = function(){
@@ -317,6 +318,7 @@ var afonigizer = afonigizer || (function (Math, Node) {
 			}
 
 			return true;
-		} //doIt()
+		} // doIt()
 	}; // PUBLICS
-})(Math, Node);
+};// Afonigizer
+var afonigizer = afonigizer || new Afonigizer(Math, Node);
