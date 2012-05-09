@@ -2,10 +2,15 @@
 This is a bookmarklet that obsures ("afonigizes") people's identities on 
 facebook and google+ (sort of google+, haven't been testing) for screenshots.
 
+###Use
 Get the bookmarklet [here](http://sequoia.github.com/afonigizer/)
+To build it yourself, put the script and the code below in an link href, but wrap the doIt call in ```void()```.
 
-Currently, to use it, you paste it into your console in Firefox, Chrome, or 
-Opera *and then* ```afonigizer.doIt()```.  to bookmarkletify, put the script and the doIt call in an link href, but wrap the doIt call in ```void()```.
+If you want to run it in your browser's console paste the following things:
+1. afongizer.js into your console in Firefox, Chrome, or Opera 
+2. ```var afonigizer = afonigizer || new Afonigizer(Math, Node);```
+3. ```afonigizer.doIt()``` 
+
 
 ###Known issues
 * comments & posts not afonigized in google+, I can't figure how to handle the
@@ -22,4 +27,3 @@ dynamic classnames
 	* Allow other "common words" to be loaded
 * Afonigizer "mode": updates page as new domnodes are loaded (see throttle branch)
 * "Settings": only first names, only last names, pics or not etc.
-* Test suite

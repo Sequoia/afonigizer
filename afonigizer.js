@@ -1,9 +1,10 @@
-function Afonigizer(Math, Node) {
+function Afonigizer(Math) {
 	'use strict';
 	/* PRIVATES */
 	//imgHashService hashes a string and returns a robot
 	//image generated based on the hash
 	var imgHashService = 'http://static1.robohash.com/',
+		Node, //window.Node set by doIt (used only in nameFilter)
 		imgHashSuffix = '?size=50x50',
 		salt = Math.random().toPrecision(3),
 		conf = false, // will hold the service
@@ -307,7 +308,10 @@ function Afonigizer(Math, Node) {
 
 			var avatars = window.document.querySelectorAll(conf.avatarSelector),
 			    names = window.document.querySelectorAll(conf.nameSelector),
-				textBlocks = false;
+			    textBlocks = false;
+
+			//nameFilter relies on this (tho only Node.TEXT_NODE which === 3)
+			Node = window.Node;
 
 			fixNames(names);
 			fixAvatars(avatars);
@@ -321,4 +325,4 @@ function Afonigizer(Math, Node) {
 		} // doIt()
 	}; // PUBLICS
 };// Afonigizer
-var afonigizer = afonigizer || new Afonigizer(Math, Node);
+this.Afonigizer = Afonigizer;

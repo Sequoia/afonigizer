@@ -1,0 +1,25 @@
+{
+  "author": "Sequoia McDowell <sequoia.mcdowell@gmail.com>",
+  "name": "afonigizer",
+  "description": "Pseudo-anonymize names & avatars on facebook & elsewhere",
+  "version": "0.2.0",
+  "homepage": "https://github.com/Sequoia/afonigizer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Sequoia/afonigizer.git"
+  },
+  "main": "afonigizer.js",
+  "scripts": {
+    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose spec/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-node": "~1.0.25",
+    "underscore": "~1.3.3",
+    "UnderscoreMatchersForJasmine": "0.0.5"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
