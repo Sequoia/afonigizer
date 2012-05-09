@@ -7,14 +7,14 @@ Get the bookmarklet [here](http://sequoia.github.com/afonigizer/)
 To build it yourself, put the script and the code below in an link href, but wrap the doIt call in ```void()```.
 
 If you want to run it in your browser's console paste the following things:
-1. afongizer.js into your console in Firefox, Chrome, or Opera 
-2. ```var afonigizer = afonigizer || new Afonigizer(Math, Node);```
-3. ```afonigizer.doIt()``` 
+* afongizer.js into your console in Firefox, Chrome, or Opera
+* ```var afonigizer = afonigizer || new Afonigizer(Math, Node);```
+* ```afonigizer.doIt()``` 
 
 ###Tests
 To run tests, you must have nodejs and npm installed
-1. Clone the repo
-2. ```npm test```
+* Clone the repo
+* ```npm test```
 
 ###Known issues
 * comments & posts not afonigized in google+, I can't figure how to handle the
