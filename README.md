@@ -11,6 +11,10 @@ If you want to run it in your browser's console paste the following things:
 2. ```var afonigizer = afonigizer || new Afonigizer(Math, Node);```
 3. ```afonigizer.doIt()``` 
 
+###Tests
+To run tests, you must have nodejs and npm installed
+1. Clone the repo
+2. ```npm test```
 
 ###Known issues
 * comments & posts not afonigized in google+, I can't figure how to handle the

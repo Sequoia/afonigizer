@@ -219,9 +219,7 @@ function Afonigizer(Math) {
 					//remove the nameSalt
 					namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
 					//skip if it's one of the common words
-					//console.log(">>" + namePart);
 					if (commonWordsPtrn.test(namePart)) { continue; }
-					//console.log("<<" + namePart);
 					alias = nameMap[saltedNamePart];
 					//remove the nameSalt
 					//replace name

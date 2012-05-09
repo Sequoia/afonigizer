@@ -1,12 +1,13 @@
 var Afonigizer = require('../afonigizer.js').Afonigizer;
 var _ = require('../node_modules/underscore/underscore.js');
+require('../node_modules/UnderscoreMatchersForJasmine/lib/UnderscoreMatchersForJasmine.js');
 describe("The Afonigizer", function(){
 'use strict';
 
-	var afonigizer, i;
+	var afonigizer, af, i;
 
 	beforeEach(function(){
-		afonigizer = new Afonigizer(Math);
+		afonigizer = af = new Afonigizer(Math);
 	});
 
 	describe("Load test libraries",function(){
@@ -22,6 +23,12 @@ describe("The Afonigizer", function(){
 
 	});
 
+	xdescribe("Load properly",function(){
+		it("should be an Afonigizer",function(){
+			expect(new Afonigizer(Math) ).toBeAn(Afonigizer);
+		});
+	});
+
 	describe("Aliasing name parts",function(){
 		var nameParts = [];
 		beforeEach(function(){
@@ -32,16 +39,20 @@ describe("The Afonigizer", function(){
 			}
 		});
 
+		it("Should throw an error if no name part type is passed",function(){
+			expect( function(){ af.aliasPart('John'); } ).toThrow();
+		});
 
-		it("Should return the same name part alias consistently",function(){
-
-			//generate a bunch of names and aliases
-				//nameParts[i] = 
-			//}
-			
-			//setup aliases
+		it("Should return the same first name part alias consistently",function(){
 			nameParts.forEach(function(elem,index,names){
-				//aliasParts.push( afonigizer.aliasPart(i,firstName) );
+				//store alias
+				elem.alias = af.aliasPart(index,'first');
+				//test that it returns again
+				expect(af.aliasPart(index,'first')).toEqual(elem.alias);
+				//it should still work if a last name is requested
+				expect(af.aliasPart(index,'last')).toEqual(elem.alias);
+				//it should NOT return the same alias for the wrong name
+				expect(af.aliasPart(index-1,'last')).not.toEqual(elem.alias);
 			});
 		});
 
