@@ -14,6 +14,7 @@ If you want to run it in your browser's console paste the following things:
 ###Tests
 To run tests, you must have nodejs and npm installed
 * Clone the repo
+* ```npm install```
 * ```npm test```
 
 ###Known issues
