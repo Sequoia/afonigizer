@@ -18,18 +18,22 @@ function Afonigizer(Math) {
 				//so this checks that there is only one (text) child node
 				nameFilter : function (anchor) {
 					return ( anchor.childNodes.length === 1 &&
-							 anchor.firstChild.nodeType === Node.TEXT_NODE );
+						anchor.firstChild.nodeType === Node.TEXT_NODE );
 				},
 				//this is what to hash against g+ has diff img.src for medium 
 				//& small thumbs, so we use the oid (user id)
 				hashAttribute : 'oid'
 			},
 			facebook : {
-				avatarSelector : 'img.uiProfilePhoto, img.posterProfilePic' +
-					', img[itemprop=photo]' +
-					', .fbxWelcomeBoxImg' + //top left column user's avatar 
+				avatarSelector :
+					'img.-cx-PRIVATE-uiSquareImage__root' +  //main selector, catches most images
+					', img.ProfilePic' + //post parent on each post on feed
+					', img[itemprop=photo]' + //top main photo on timeline
+					', .fbxWelcomeBoxImg' + //top left column user's avatar on feed
 					', .fbChatOrderedList .item a .pic', //chat sidebar
-				nameSelector : 'a.actorName, div.actorName a' +
+				//nameSelector could probably be cleaned up
+				nameSelector :
+					'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard], span.blueName' +
 					', span.profileName, span.fwb a, div.friendSubtitle a, a[itemprop=name]' +
 					', .fbMercuryChatTab .titlebar .titlebarText' + //chat title bar
@@ -80,11 +84,11 @@ function Afonigizer(Math) {
 		},
 		
 		/*
-		 * returns whether the afonigized class is present
-		 * adds it if it's not
-		 * @param element elem element to check
-		 * @return bool whether elem has the class
-		 */
+		* returns whether the afonigized class is present
+		* adds it if it's not
+		* @param element elem element to check
+		* @return bool whether elem has the class
+		*/
 		checkDone = function (elem) {
 			var clazz = 'afonigized';
 			if (elem.classList.contains(clazz)) {
@@ -94,13 +98,13 @@ function Afonigizer(Math) {
 			return false;
 		},
 		/**
-		 * Recieve a name, return an alias
-		 * if no alias exists, assign a new one
-		 * @param String namePart first or last name
-		 * @param firstOrLast accepts "first" or "last"
-		 *        determines which internal name list to use
-		 * @return String aliasPart alias for the namePart
-		 */
+		* Recieve a name, return an alias
+		* if no alias exists, assign a new one
+		* @param String namePart first or last name
+		* @param firstOrLast accepts "first" or "last"
+		*        determines which internal name list to use
+		* @return String aliasPart alias for the namePart
+		*/
 		getAlias = function (namePart, firstOrLast) {
 			var nKey = nameSalt + namePart,
 					aliases;
@@ -125,8 +129,8 @@ function Afonigizer(Math) {
 			return nameMap[nKey];
 		},
 		/**
-		 * Replace names on the page with aliases
-		 */
+		* Replace names on the page with aliases
+		*/
 		fixNames = function (names) {
 			var i;
 			for (i = 0; i < names.length; i++) {
@@ -161,10 +165,10 @@ function Afonigizer(Math) {
 		},
 		fixAvatars = function (avatars) {
 			//Replace the profile pic with a robot pic
-			var i,
-			    avatar,
-				newSrc,
-				success = false;
+			var i;
+			var avatar;
+			var newSrc;
+			var success = false;
 			for (i = 0; i < avatars.length; i++) {
 				//@todo make this a function w/public accessor
 				avatar = avatars.item(i);
@@ -173,9 +177,9 @@ function Afonigizer(Math) {
 
 				//generate hash based on src attr. & salt
 				newSrc = String(avatar.attributes[conf.hashAttribute].value
-				         .match(/([\d]+)/g)
-						 .join("")
-						 ).substring(0,10);
+					.match(/([\d]+)/g)
+					.join("")
+				).substring(0,10);
 				newSrc = (newSrc * salt); //salt is a random number
 
 				//generate image based on profile image src.
@@ -186,7 +190,7 @@ function Afonigizer(Math) {
 					var that = this,
 						imgSrc = that.src;
 					that.src = imgSrc;
-				}
+				};
 			}
 		},
 		fixTextblocks = function(blocks){
@@ -235,9 +239,9 @@ function Afonigizer(Math) {
 			}
 		},
 		/**
-		 * an "ok" shuffle/randomization
-		 * shuffle/reverse a few times
-		 */
+		* an "ok" shuffle/randomization
+		* shuffle/reverse a few times
+		*/
 		_mixUp = function (anArray) {
 			var iterations = Math.floor(Math.random() * 3) + 3,
 				i;
@@ -262,40 +266,40 @@ function Afonigizer(Math) {
 	return {
 
 		/** return an alias for a full name 
-		 *  @param String fullNameStr full name
-		 *  @return String afonigized full name
-		 */
+		*  @param String fullNameStr full name
+		*  @return String afonigized full name
+		*/
 		alias : function( fullNameStr ){
 			return fixFullName(fullNameStr);
 		},
 
 		/** return an aliased name part
-		 *  @param String namePartStr single name part (first or last)
-		 *  @param String firstOrLast accepts 'first' or 'last'
-		 *  @return String afonigized name part
-		 */
+		*  @param String namePartStr single name part (first or last)
+		*  @param String firstOrLast accepts 'first' or 'last'
+		*  @return String afonigized name part
+		*/
 		aliasPart : function( namePartStr, firstOrLast ){
 			return getAlias( namePartStr, firstOrLast );
 		},
 
 		/** return an afonigized text block
-		 *  @param String text block
-		 *  @return String afonigized text block
-		 */
+		*  @param String text block
+		*  @return String afonigized text block
+		*/
 		textBlock : function( textBlock ){
 			return fixTextBlock( textBlock );
 		},
 
 		/** return an afonigized avatar src
-		 *  @param String image node 
-		 *  @return void
-		 */
+		*  @param String image node 
+		*  @return void
+		*/
 		// avatarSrc : function(){}, //@todo
 
 		/** replace an image's src with an afonigized src 
-		 *  @param Node image node 
-		 *  @return void
-		 */
+		*  @param Node image node 
+		*  @return void
+		*/
 		// fixAvatar : function(){}, //@todo
 		// configure : function(){}, //@todo pass site config in for doIt
 		//                           //full page afonigization
@@ -305,8 +309,8 @@ function Afonigizer(Math) {
 			if (!conf) { setConf(host); }
 
 			var avatars = window.document.querySelectorAll(conf.avatarSelector),
-			    names = window.document.querySelectorAll(conf.nameSelector),
-			    textBlocks = false;
+					names = window.document.querySelectorAll(conf.nameSelector),
+					textBlocks = false;
 
 			//nameFilter relies on this (tho only Node.TEXT_NODE which === 3)
 			Node = window.Node;
@@ -315,12 +319,12 @@ function Afonigizer(Math) {
 			fixAvatars(avatars);
 
 			if (conf.textblockSelector){
-			    textBlocks = window.document.querySelectorAll(conf.textblockSelector);
+				textBlocks = window.document.querySelectorAll(conf.textblockSelector);
 				fixTextblocks( textBlocks ); 
 			}
 
 			return true;
 		} // doIt()
 	}; // PUBLICS
-};// Afonigizer
+}// Afonigizer
 this.Afonigizer = Afonigizer;
