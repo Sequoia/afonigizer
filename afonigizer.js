@@ -41,7 +41,9 @@ function Afonigizer(Math) {
 					', .headerTinymanName' + //top navbar name
 					', .fbxWelcomeBoxName' + //top left column user's name
 					', .fbReminders .fbRemindersStory .fbRemindersTitle strong' + //birthday's &c.
-					', .ego_title', //People you may know
+					', .ego_title' + //People you may know
+					', div.name' + //"Friends" on timeline
+					', .fsm>a', //"also like this" on feed page
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
