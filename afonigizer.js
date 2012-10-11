@@ -1,4 +1,5 @@
-function Afonigizer(Math) {
+/*jshint browser:true, devel:true*/
+function Afonigizer() {
 	'use strict';
 	/* PRIVATES */
 	//imgHashService hashes a string and returns a robot
@@ -26,9 +27,12 @@ function Afonigizer(Math) {
 			},
 			facebook : {
 				avatarSelector :
-					'img.-cx-PRIVATE-uiSquareImage__root' +  //main selector, catches most images
-					', img.ProfilePic' + //post parent on each post on feed
+					'img.UFIActorImage' + // comment images including current user image
 					', img[itemprop=photo]' + //top main photo on timeline
+					', img._s0' + //catches most
+					', img.-cx-PRIVATE-uiSquareImage__root' +  //main selector, catches most images
+					', img.tickerStoryImage' +  //top right sidebar "ticker"
+					', img.profilePic' + //post parent on each post on feed
 					', .fbxWelcomeBoxImg' + //top left column user's avatar on feed
 					', .fbChatOrderedList .item a .pic', //chat sidebar
 				//nameSelector could probably be cleaned up
@@ -223,13 +227,13 @@ function Afonigizer(Math) {
 			for (var saltedNamePart in nameMap) {
 				if (nameMap.hasOwnProperty(saltedNamePart)) {
 					//remove the nameSalt
-					namePart = saltedNamePart.match(RegExp(nameSalt + '(.*)$'))[1];
+					namePart = saltedNamePart.match(new RegExp(nameSalt + '(.*)$'))[1];
 					//skip if it's one of the common words
 					if (commonWordsPtrn.test(namePart)) { continue; }
 					alias = nameMap[saltedNamePart];
 					//remove the nameSalt
 					//replace name
-					namePattern = RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
+					namePattern = new RegExp('\\b(' + namePart.match(/[\w]+/)[0] + ')\\b',
 						"gim");
 					newBlockText = newBlockText.replace(namePattern,alias);
 				}
@@ -245,12 +249,13 @@ function Afonigizer(Math) {
 		* shuffle/reverse a few times
 		*/
 		_mixUp = function (anArray) {
-			var iterations = Math.floor(Math.random() * 3) + 3,
-				i;
+			var iterations = Math.floor(Math.random() * 3) + 3;
+			var i;
+			var rando = function () {
+				return (Math.round(Math.random()) - 0.5); 
+			};
 			for (i = 0; i < iterations; i++){
-				anArray.sort ( function () {
-						return (Math.round(Math.random()) - 0.5); 
-					} );
+				anArray.sort (rando);
 				anArray.reverse();
 			}
 			return anArray;
@@ -305,7 +310,12 @@ function Afonigizer(Math) {
 		// fixAvatar : function(){}, //@todo
 		// configure : function(){}, //@todo pass site config in for doIt
 		//                           //full page afonigization
-		doIt : function (window) {
+		/**
+		 * run afonigizer on current page
+		 * relies on window
+		 * @return void
+		 */
+		doIt : function () {
 			//load the conf for the site we're on
 			var host = window.location.hostname;
 			if (!conf) { setConf(host); }
