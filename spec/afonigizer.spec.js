@@ -20,15 +20,19 @@ describe("The Afonigizer", function(){
 		});
 
 		//causes error
-		xit("should not die on an unloaded library",function(){
+		it("should not die on an unloaded library",function(){
 			expect(typeof $).not.toEqual('function');
 		});
 
 	});
 
-	xdescribe("Load properly",function(){
-		it("should be an Afonigizer",function(){
-			expect(new Afonigizer(Math) ).toBeAn(Afonigizer);
+	describe("API",function(){
+		it("should expose the expected methods",function(){
+			console.log();
+			['alias','aliasPart','textBlock','doIt'].forEach(function(fName,k,all){
+				expect(afonigizer[fName]).toBeA(Function); 
+			});
+			//expect(new Afonigizer(Math) ).toBeA(Function);
 		});
 	});
 

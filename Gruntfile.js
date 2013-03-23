@@ -34,6 +34,10 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
+		jasmine_node: {
+			specNameMatcher: "spec/*", // load only specs containing specNameMatcher
+			projectRoot: "."
+		},
 		watch: {
 			files: '<config:jshint.files>',
 			tasks: 'jshint'
@@ -44,8 +48,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-jasmine-node');
 	//
   // Default task.
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
-
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'jasmine_node']);
+	grunt.registerTask('travis', ['jshint', 'jasmine_node']);
 };
