@@ -1,3 +1,6 @@
+/*jshint browser:true, devel:true*/
+/*global beforeEach:false, describe: false, it: false, expect: false, xit: false, xdescribe: false*/
+
 var Afonigizer = require('../afonigizer.js').Afonigizer;
 var _ = require('../node_modules/underscore/underscore.js');
 require('../node_modules/UnderscoreMatchersForJasmine/lib/UnderscoreMatchersForJasmine.js');
