@@ -27,7 +27,9 @@
     "grunt-contrib-jshint": "~0.3.0",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-jasmine-node": "0.0.6",
-    "grunt-cli": "~0.1.6"
+    "grunt-cli": "~0.1.6",
+		"grunt-git": "Sequoia/grunt-git",
+    "grunt-template": "~0.2.0"
   },
   "optionalDependencies": {},
   "engines": {

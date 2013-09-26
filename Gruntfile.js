@@ -41,6 +41,13 @@ module.exports = function(grunt) {
 		watch: {
 			files: '<config:jshint.files>',
 			tasks: 'jshint'
+		},
+		gitcheckout: {
+			ghPages : { options : { branch : 'gh-pages' } },
+			master : { options : { branch : 'master' } }
+		},
+		gitrebase: {
+			master : { options : { branch : 'master' } }
 		}
   });
 
@@ -49,8 +56,19 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-jasmine-node');
-	//
-  // Default task.
+	grunt.loadNpmTasks('grunt-git');
+	grunt.loadNpmTasks('grunt-template');
+	
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'jasmine_node']);
+  grunt.registerTask('mas', ['gitcheckout:ghPages']);
+  grunt.registerTask('bookmarklet', [
+		'gitcheckout:gh-pages',
+		'gitrebase:master',
+		/*template,*/
+		'gitcheckout:master'
+	]);
+
+  //TODO grunt.registerTask('plugin', [/*build plugin stuffs*/]);
+  //TODO grunt.registerTask('build', ['bookmarklet', /*'plugin'*/]);
 	grunt.registerTask('travis', ['jshint', 'jasmine_node']);
 };
