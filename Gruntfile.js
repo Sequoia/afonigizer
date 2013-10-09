@@ -62,7 +62,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'jasmine_node']);
   grunt.registerTask('mas', ['gitcheckout:ghPages']);
   grunt.registerTask('bookmarklet', [
-		'gitcheckout:gh-pages',
+		'gitcheckout:ghPages',
 		'gitrebase:master',
 		/*template,*/
 		'gitcheckout:master'
