@@ -178,6 +178,12 @@ function Afonigizer() {
 			var avatar;
 			var newSrc;
 			var success = false;
+			var retryImageLoad = function(){
+				var that = this,
+					imgSrc = that.src;
+				that.src = imgSrc;
+			};
+
 			for (i = 0; i < avatars.length; i++) {
 				//@todo make this a function w/public accessor
 				avatar = avatars.item(i);
@@ -195,11 +201,7 @@ function Afonigizer() {
 				newSrc = imgHashService + newSrc + imgHashSuffix;
 				avatar.src = newSrc;
 				//this reapplies the new source if errors occur
-				avatar.onerror = function(){
-					var that = this,
-						imgSrc = that.src;
-					that.src = imgSrc;
-				};
+				avatar.onerror = retryImageLoad;
 			}
 		},
 		fixTextblocks = function(blocks){
