@@ -1,4 +1,5 @@
 /*global module:false*/
+fs = require('fs');
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -47,7 +48,7 @@ module.exports = function(grunt) {
 				options : {
 					data : function(){
 						return {
-							marklet : fs.readFileSync('<% uglify.dist.dest %>','ascii').trim()
+							marklet : fs.readFileSync('dist/afonigizer.min.js','ascii').trim()
 						};
 					}
 				},
