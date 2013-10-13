@@ -68,14 +68,31 @@ module.exports = function(grunt) {
 	
   grunt.registerTask('default', ['jshint', 'uglify', 'jasmine_node']);
 
-	//build the bookmarklet on the gh-pages branch
-  grunt.registerTask('bookmarklet', [
-		'gitcheckout:ghPages',
-		'gitrebase:master',
-		'template:bookmarkletPage',
-		'gitcommit:bookmarkletUpdate',
-		'gitcheckout:master'
-	]);
+	//this whole gnarly block is here to make sure there is something to commit
+	//before it attempts to commit.  Committing "no changes" will abort due to warnings
+  grunt.registerTask('bookmarklet',
+		'build the bookmarklet on the gh-pages branch',
+		function(){
+		grunt.util.async.series([
+			function(){
+				grunt.task.run('gitcheckout:ghPages',
+					'gitrebase:master',
+					'template:bookmarkletPage');
+			},
+			function () {
+				grunt.util.spawn({
+					cmd: "git",
+					args: ["diff", "--exit-code",
+						grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
+				}, function (err, result, code) {
+					//only attempt to commit if git diff picks something up
+					if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
+				});
+			},
+			function(){ grunt.task.run('gitcheckout:master'); }
+		]);
+		}
+	);
 
   //TODO grunt.registerTask('plugin', [/*build plugin stuffs*/]);
   //TODO grunt.registerTask('build', ['bookmarklet', /*'plugin'*/]);
