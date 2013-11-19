@@ -73,24 +73,26 @@ module.exports = function(grunt) {
   grunt.registerTask('bookmarklet',
 		'build the bookmarklet on the gh-pages branch',
 		function(){
-		grunt.util.async.series([
-			function(){
-				grunt.task.run('gitcheckout:ghPages',
-					'gitrebase:master',
-					'template:bookmarkletPage');
-			},
-			function () {
-				grunt.util.spawn({
-					cmd: "git",
-					args: ["diff", "--exit-code",
-						grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
-				}, function (err, result, code) {
-					//only attempt to commit if git diff picks something up
-					if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
-				});
-			},
-			function(){ grunt.task.run('gitcheckout:master'); }
-		]);
+			grunt.util.async.series([
+				function(){ //1
+					grunt.task.run(
+						'gitcheckout:ghPages',
+						'gitrebase:master',
+						'template:bookmarkletPage'
+					);
+				},
+				function () { //2
+					grunt.util.spawn({
+						cmd: "git",
+						args: ["diff", "--exit-code",
+							grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
+					}, function (err, result, code) {
+						//only attempt to commit if git diff picks something up
+						if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
+					});
+				},
+				function(){ /*3*/ grunt.task.run('gitcheckout:master'); }
+			]);
 		}
 	);
 
