@@ -80,7 +80,7 @@ module.exports = function(grunt) {
 						'gitrebase:master',
 						'template:bookmarkletPage'
 					);
-					cb();
+					cb(null);
 				},
 				function (cb) { //2
 					grunt.util.spawn({
@@ -91,11 +91,11 @@ module.exports = function(grunt) {
 						//only attempt to commit if git diff picks something up
 						if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
 					});
-					cb();
+					cb(null);
 				},
 				function(cb){ /*3*/
 					grunt.task.run('gitcheckout:master');
-					cb();
+					cb(null);
 				}
 			]);
 		}
