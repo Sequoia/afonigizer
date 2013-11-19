@@ -88,6 +88,7 @@ module.exports = function(grunt) {
 						args: ["diff", "--exit-code",
 							grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
 					}, function (err, result, code) {
+						console.log(code);
 						//only attempt to commit if git diff picks something up
 						if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
 					});
