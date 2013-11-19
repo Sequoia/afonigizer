@@ -74,15 +74,15 @@ module.exports = function(grunt) {
 		'build the bookmarklet on the gh-pages branch',
 		function(){
 			grunt.util.async.series([
-				function(){ //1
+				function(cb){ //1
 					grunt.task.run(
 						'gitcheckout:ghPages',
 						'gitrebase:master',
 						'template:bookmarkletPage'
 					);
-	console.log(1);
+					cb();
 				},
-				function () { //2
+				function (cb) { //2
 					grunt.util.spawn({
 						cmd: "git",
 						args: ["diff", "--exit-code",
@@ -91,11 +91,11 @@ module.exports = function(grunt) {
 						//only attempt to commit if git diff picks something up
 						if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
 					});
-	console.log(2);
+					cb();
 				},
-				function(){ /*3*/
+				function(cb){ /*3*/
 					grunt.task.run('gitcheckout:master');
-	console.log(3);
+					cb();
 				}
 			]);
 		}
