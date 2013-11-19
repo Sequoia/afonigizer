@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 			grunt.util.spawn({
 				cmd: "git",
 				args: ["diff", "--quiet", //just exists with 1 or 0 (chagne, no change)
-					grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
+					grunt.config.data.gitcommit.bookmarkletUpdate.files.src[0]]
 			}, function (err, result, code) {
 				console.log("exit code:" + code);
 				console.log(err);
