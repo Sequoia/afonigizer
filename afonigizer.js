@@ -27,7 +27,7 @@ function Afonigizer() {
 				},
 				//this is what to hash against g+ has diff img.src for medium 
 				//& small thumbs, so we use the oid (user id)
-				hashAttribute : 'oid'
+				hashAttribute : 'oid' //TODO fix this for google, should be hashFunction
 			},
 			facebook : {
 				avatarSelector :
@@ -44,13 +44,15 @@ function Afonigizer() {
 					'a.actorName, div.actorName a' +
 					', a.passiveName, span.passiveName, a[data-hovercard], span.blueName' +
 					', span.profileName, span.fwb a, div.friendSubtitle a, a[itemprop=name]' +
+					', div#fbProfileCover h2>a' + //timeline page title over cover photo
 					', .fbMercuryChatTab .titlebar .titlebarText' + //chat title bar
 					', .fbChatOrderedList .item a .name' + //chat sidebar
 					', .headerTinymanName' + //top navbar name
 					', .fbxWelcomeBoxName' + //top left column user's name
 					', .fbReminders .fbRemindersStory .fbRemindersTitle strong' + //birthday's &c.
 					', .ego_title' + //People you may know
-					', div.name',
+					', div.name' + //"Friends" on timeline
+					', .fsm>a', //"also like this" on feed page
 				textblockSelector : '.messageBody, .commentBody',
 				nameFilter : function (anchor) {
 					var success = ( anchor.childNodes.length === 1 &&
@@ -63,7 +65,30 @@ function Afonigizer() {
 					}
 					return success;
 				},
-				hashAttribute : 'src'
+				//hashFunction gets passed the img element & returns the string to
+				//base the hash upon (string that is the same for all instances of the
+				//avatar)
+				//@return Integer or false (MUST return integer)
+				hashFunction : function(aviElem){
+					var profilePath = null; //path to profile for the avi
+
+					if(aviElem.parentElement.classList.contains('profilePicThumb')){
+						//timeline big/main Avi uses current url because link is to pic not profile
+						profilePath = window.location.pathname;
+					}else if(aviElem.parentElement.tagName.toLowerCase()!=='a'){
+						//it's the li'l image next to the comment box; must be logged in user
+						profilePath = document.querySelector('#navTimeline a').pathname;
+					}else{
+						//everything else, use the link wrapping the image
+						profilePath = aviElem.parentElement.pathname;
+					}
+
+					var profileArray = profilePath.split('');
+					var profileIntString = profileArray.map(function(character){
+						return Math.abs(character.charCodeAt() - 100); //reduce the # of 0s
+					}).join('');
+					return Number(profileIntString);
+				}
 			}
 		},
 		//@todo I probably don't need quite this many...
@@ -178,30 +203,34 @@ function Afonigizer() {
 			var avatar;
 			var newSrc;
 			var success = false;
-			var retryImageLoad = function(){
-				var that = this,
-					imgSrc = that.src;
+			var retryOnError = function(){
+				var that = this;
+				var imgSrc = that.src;
 				that.src = imgSrc;
 			};
-
 			for (i = 0; i < avatars.length; i++) {
 				//@todo make this a function w/public accessor
 				avatar = avatars.item(i);
 				//don't reconvert anything
 				if (checkDone(avatar)) { continue; }
 
-				//generate hash based on src attr. & salt
-				newSrc = String(avatar.attributes[conf.hashAttribute].value
-					.match(/([\d]+)/g)
-					.join("")
-				).substring(0,10);
+				//hashFunction exists, use it
+				if(conf.hashFunction !== undefined){
+					newSrc = conf.hashFunction(avatar);
+				}
+				else{ //no hashFunction, use hashAttribute
+					newSrc = Number(String(avatar.attributes[conf.hashAttribute].value
+						.match(/([\d]+)/g)
+						.join("")
+					).substring(0,10));
+				}
 				newSrc = (newSrc * salt); //salt is a random number
 
 				//generate image based on profile image src.
 				newSrc = imgHashService + newSrc + imgHashSuffix;
 				avatar.src = newSrc;
 				//this reapplies the new source if errors occur
-				avatar.onerror = retryImageLoad;
+				avatar.onerror = retryOnError;
 			}
 		},
 		fixTextblocks = function(blocks){
