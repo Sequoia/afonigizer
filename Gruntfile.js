@@ -70,28 +70,29 @@ module.exports = function(grunt) {
 
   //this whole gnarly block is here to make sure there is something to commit
   //before it attempts to commit.  Committing "no changes" will abort due to warnings
+  grunt.registerTask('commitIfChanged', function(){
+    var done = this.async();
+
+    grunt.util.spawn({
+      cmd: "git",
+      args: ["diff", "--quiet", //just exists with 1 or 0 (chagne, no change)
+        '--', grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
+    }, function (err, result, code) {
+      //only attempt to commit if git diff picks something up
+      if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
+
+      if(err === null || err.message.length === 0){
+        //there's no error (no diff) or no err msg (which means no error)
+        err = null;
+      }
+
+      done(!err);
+    });
+  });
+
   grunt.registerTask('bookmarklet', 'build the bookmarklet on the gh-pages branch',
-    function(){
-      //update the bookmarklet
-      grunt.task.run(
-        'gitcheckout:ghPages',
-        'gitrebase:master',
-        'template:bookmarkletPage'
-      );
-
-      //if there are changes, commit them
-      grunt.util.spawn({
-        cmd: "git",
-        args: ["diff", "--quiet", //just exists with 1 or 0 (chagne, no change)
-          '--', grunt.config.data.gitcommit.bookmarkletUpdate.files.src]
-      }, function (err, result, code) {
-        //only attempt to commit if git diff picks something up
-        if(code){ grunt.task.run('gitcommit:bookmarkletUpdate'); }
-      });
-
-      //check master back out
-      grunt.task.run('gitcheckout:master');
-    }
+    [ 'gitcheckout:ghPages', 'gitrebase:master', 'template:bookmarkletPage',
+    'commitIfChanged', 'gitcheckout:master']
   );
 
   //TODO grunt.registerTask('plugin', [/*build plugin stuffs*/]);
