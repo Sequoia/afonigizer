@@ -68,8 +68,23 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['jshint', 'uglify', 'jasmine_node']);
 
-  //this whole gnarly block is here to make sure there is something to commit
-  //before it attempts to commit.  Committing "no changes" will abort due to warnings
+  grunt.registerTask('assertNoUncommittedChanges', function(){
+    var done = this.async();
+
+    grunt.util.spawn({
+      cmd: "git",
+      args: ["diff", "--quiet"]
+    }, function (err, result, code) {
+      if(code === 1){
+        grunt.fail.fatal('There are uncommitted changes. Commit or stash before continuing\n');
+      }
+      if(code <= 1){ err = null; } //code 0,1 => no error
+      done(!err);
+    });
+  });
+
+  //this block is here to make sure there is something to commit
+  //Committing "no changes" will abort due to warnings
   grunt.registerTask('commitIfChanged', function(){
     var done = this.async();
 
@@ -92,8 +107,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('bookmarklet', 'build the bookmarklet on the gh-pages branch',
-    [ 'gitcheckout:ghPages', 'gitrebase:master', 'template:bookmarkletPage',
-    'commitIfChanged', 'gitcheckout:master']
+    [ 'assertNoUncommittedChanges', 'gitcheckout:ghPages', 'gitrebase:master',
+      'template:bookmarkletPage', 'commitIfChanged', 'gitcheckout:master']
   );
 
   //TODO grunt.registerTask('plugin', [/*build plugin stuffs*/]);
