@@ -53,7 +53,7 @@ function Afonigizer() {
         ', .ego_title' + //People you may know
         ', div.name' + //"Friends" on timeline
         ', .fsm>a', //"also like this" on feed page
-      textblockSelector : '.messageBody, .commentBody',
+      textblockSelector : '.UFICommentBody, .userContent',
       nameFilter : function (anchor) {
         var success = ( anchor.childNodes.length === 1 &&
                        anchor.firstChild.nodeType === Node.TEXT_NODE );
