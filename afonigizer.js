@@ -32,6 +32,7 @@ function Afonigizer() {
     facebook : {
       avatarSelector :
         'img.UFIActorImage' + // comment images including current user image
+//good ^
         ', img[itemprop=photo]' + //top main photo on timeline
         ', img._s0' + //catches most
         ', img.-cx-PRIVATE-uiSquareImage__root' +  //main selector, catches most images
@@ -77,7 +78,7 @@ function Afonigizer() {
           profilePath = window.location.pathname;
         }else if(aviElem.parentElement.tagName.toLowerCase()!=='a'){
           //it's the li'l image next to the comment box; must be logged in user
-          profilePath = document.querySelector('#navTimeline a').pathname;
+          profilePath = document.querySelector('span.headerTinymanName').parentNode.pathname;
         }else{
           //everything else, use the link wrapping the image
           profilePath = aviElem.parentElement.pathname;
