@@ -52,24 +52,29 @@ function Afonigizer() {
         ', .fbxWelcomeBoxName' + //top left column user's name
         ', .fbReminders .fbRemindersStory .fbRemindersTitle strong' + //birthday's &c.
         ', .ego_title' + //People you may know
-        ', div.name' + //"Friends" on timeline
-        ', .fsm>a', //"also like this" on feed page
+        ', div.name', //"Friends" on timeline
       textblockSelector : '.UFICommentBody, .userContent',
       nameFilter : function (anchor) {
-        var success = ( anchor.childNodes.length === 1 &&
-                       anchor.firstChild.nodeType === Node.TEXT_NODE );
-        if ( success && anchor.hasOwnProperty('href') ) {
-          //skip fb pages (doesn't work on vanity urls)
-          success = (anchor.href.match(/^http[s]?:\/\/www.facebook.com\/pages\//) === null);
-            //skip music
-            success = (anchor.href.match(/^http[s]?:\/\/www.facebook.com\/music\//) === null);
+        if(!( anchor.childNodes.length === 1 &&
+                       anchor.firstChild.nodeType === Node.TEXT_NODE )){
+          return false;
         }
-          return success;
+        if (anchor.hasOwnProperty('pathname')){
+          //path w/ >1 part (/browse/likes, /user/posts) is NOT user page
+          if(anchor.pathname.lastIndexOf('/') !== 0){
+            return false;
+          }
+          //path that's just '/' is NOT a user page
+          if(anchor.pathname === '/'){
+            return false;
+          }
+        }
+        return true;
       },
       //hashFunction gets passed the img element & returns the string to
       //base the hash upon (string that is the same for all instances of the
       //avatar)
-      //@return Integer or false (MUST return integer)
+      //@return Integer
       hashFunction : function(aviElem){
         var profilePath = null; //path to profile for the avi
 
